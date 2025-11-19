@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Krsxh , KRX Community - CC Gen Tool</title>
+    <link rel="icon" href="https://i.ibb.co/fSvY0P1/sharingan-icon.png" type="image/png" />
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Fira+Code:wght@400&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* --- CORE THEME & LAYOUT (LIGHT BLUE & WHITE) --- */
+        :root {
+            --bg-color: #f0f8ff; /* Light blue white */
+            --header-bg: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+            --glass-bg: rgba(255, 255, 255, 0.7); /* Glass effect background */
+            --primary-accent: #3b82f6; /* Light blue */
+            --primary-accent-hover: #60a5fa; /* Lighter blue */
+            --border-color: rgba(59, 130, 246, 0.3); /* Light blue with opacity */
+            --text-color: #333333; /* Dark text for contrast */
+            --secondary-color: #f0f7ff; /* Light background for buttons */
+            --transition-curve: ease-in-out;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- ROTATING BACKGROUND IMAGE --- */
+        .rotating-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e0f2fe 50%, #f0f8ff 100%);
+            overflow: hidden;
+        }
+
+        .rotating-bg::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1200px;
+            height: 1200px;
+            background: url('https://files.catbox.moe/3cop6x.jpg') no-repeat center/cover;
+            transform: translate(-50%, -50%) rotate(0deg);
+            opacity: 0.15;
+            animation: rotateBackground 60s linear infinite;
+            border-radius: 50%;
+        }
+
+        @keyframes rotateBackground {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* --- FLOATING BALLS ANIMATION --- */
+        .floating-ball {
+            position: fixed;
+            top: -100px;
+            width: 50px; /* Smaller size */
+            height: 50px; /* Smaller size */
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            z-index: 9999;
+            animation: floatDown 8s linear forwards;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            opacity: 0.8;
+        }
+
+        .ball-1 {
+            background-image: url('https://files.catbox.moe/s0etcx.png');
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .ball-2 {
+            background-image: url('https://files.catbox.moe/4031o7.jpg');
+            left: 45%;
+            animation-delay: 2s;
+        }
+
+        .ball-3 {
+            background-image: url('https://files.catbox.moe/gm6uwv.jpg');
+            left: 80%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatDown {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* --- GLASS EFFECTS --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1.5rem;
+            box-shadow: 
+                0 8px 32px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            box-shadow: 
+                0 12px 40px rgba(59, 130, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .glass-button {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 4px 15px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 
+                0 6px 20px rgba(59, 130, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+
+        /* --- FORM STYLING --- */
+        .form-input {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            transition: all 0.3s var(--transition-curve);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        
+        #result { 
+            font-family: 'Fira Code', monospace; 
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            backdrop-filter: blur(10px);
+        }
+        
+        #result::-webkit-scrollbar { width: 8px; }
+        #result::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.5); border-radius: 4px; }
+        #result::-webkit-scrollbar-thumb { 
+            background-color: var(--primary-accent); 
+            border-radius: 4px; 
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary-accent) 0%, var(--primary-accent-hover) 100%);
+            color: white;
+            border: none;
+            transition: all 0.3s var(--transition-curve);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-primary:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(135deg, var(--primary-accent-hover) 0%, #93c5fd 100%);
+        }
+        
+        .btn-secondary { 
+            background: var(--secondary-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s var(--transition-curve);
+        }
+        
+        .btn-secondary:hover { 
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-1px);
+        }
+        
+        button:active { transform: scale(0.98); }
+
+        /* --- CUSTOM SELECT --- */
+        .custom-select-container { position: relative; }
+        .custom-select-trigger { 
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem; 
+            padding: 0.75rem; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all 0.3s var(--transition-curve);
+            backdrop-filter: blur(10px);
+        }
+        
+        .custom-select-container.open .custom-select-trigger { 
+            border-color: var(--primary-accent); 
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); 
+        }
+        
+        .custom-select-trigger .arrow { transition: transform 0.3s var(--transition-curve); }
+        .custom-select-container.open .arrow { transform: rotate(180deg); }
+        
+        .custom-select-options { 
+            position: absolute; 
+            top: calc(100% + 8px); 
+            left: 0; 
+            right: 0; 
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--primary-accent); 
+            border-radius: 0.75rem; 
+            z-index: 50; 
+            max-height: 250px; 
+            overflow-y: auto; 
+            opacity: 0; 
+            transform: translateY(-10px); 
+            pointer-events: none; 
+            transition: opacity 0.3s var(--transition-curve), transform 0.3s var(--transition-curve);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .custom-select-container.open .custom-select-options { 
+            opacity: 1; 
+            transform: translateY(0); 
+            pointer-events: auto; 
+        }
+        
+        .custom-select-option { 
+            padding: 0.75rem; 
+            cursor: pointer; 
+            transition: background-color 0.2s, color 0.2s; 
+        }
+        
+        .custom-select-option:hover { 
+            background-color: var(--primary-accent); 
+            color: white; 
+        }
+        
+        .custom-select-option.selected { 
+            background-color: var(--primary-accent); 
+            color: white; 
+            font-weight: 500; 
+        }
+        
+        .custom-select-options::-webkit-scrollbar { width: 6px; } 
+        .custom-select-options::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.5); } 
+        .custom-select-options::-webkit-scrollbar-thumb { 
+            background-color: var(--primary-accent); 
+            border-radius: 3px; 
+        }
+
+        /* --- NEW STYLES --- */
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-accent) 0%, var(--primary-accent-hover) 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .card-preview {
+            font-family: 'Fira Code', monospace;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 247, 255, 0.9) 100%);
+            border: 1px solid var(--primary-accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 10px;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-chip {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .card-number {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-accent);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            color: var(--text-color);
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border: 1px solid var(--primary-accent);
+            font-size: 0.8rem;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .export-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .floating-sharingan {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            filter: invert(0.3) sepia(1) saturate(5) hue-rotate(200deg);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-sharingan:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation: float 15s ease-in-out infinite;
+        }
+
+        .floating-sharingan:nth-child(2) {
+            top: 70%;
+            right: 10%;
+            animation: float 18s ease-in-out infinite reverse;
+        }
+
+        .floating-sharingan:nth-child(3) {
+            bottom: 20%;
+            left: 15%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen">
+    <div class="rotating-bg"></div>
+    
+    <!-- Floating Sharingan elements -->
+    <img src="https://i.ibb.co/gP7Xq4P/sharingan.png" class="floating-sharingan" alt="Sharingan">
+    <img src="https://i.ibb.co/gP7Xq4P/sharingan.png" class="floating-sharingan" alt="Sharingan">
+    <img src="https://i.ibb.co/gP7Xq4P/sharingan.png" class="floating-sharingan" alt="Sharingan">
+
+    <!-- Floating Balls Container -->
+    <div id="floating-balls-container"></div>
+
+    <header class="w-full mb-8 py-6 text-center glass-card mx-4 mt-4 max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold" style="color: var(--text-color);">KRX <span style="color: var(--primary-accent);">Community</span></h1>
+        <p class="text-lg mt-2" style="color: var(--primary-accent);">Awaken the power of the Sharingan</p>
+    </header>
+
+    <main class="w-full max-w-4xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8">
+        <div class="glass-card p-6 md:p-8">
+            <form id="generator-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="bin" class="block mb-2 text-sm font-medium" style="color: var(--primary-accent);">
+                            BIN (Bank Identification Number)
+                            <span class="tooltip ml-1">ℹ️
+                                <span class="tooltiptext">First 6 digits of a payment card number that identify the issuing bank</span>
+                            </span>
+                        </label>
+                        <input class="w-full form-input text-base rounded-lg p-3" type="text" id="bin" placeholder="544111xxxxxxxxxx" required>
+                        <div class="card-preview hidden" id="card-preview">
+                            <div class="card-chip"></div>
+                            <div class="card-number" id="preview-number">**** **** **** ****</div>
+                            <div class="card-details">
+                                <div>
+                                    <div class="text-xs" style="color: #888;">CARD HOLDER</div>
+                                    <div style="color: var(--text-color);">KRX MEMBER</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs" style="color: #888;">EXPIRES</div>
+                                    <div id="preview-expiry" style="color: var(--text-color);">MM/YY</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="quantity" class="block mb-2 text-sm font-medium" style="color: var(--primary-accent);">Quantity</label>
+                        <input class="w-full form-input text-sm rounded-lg p-3" type="number" id="quantity" value="15" min="1" max="2000">
+                        <div class="flex justify-between mt-2 text-xs" style="color: #888;">
+                            <span>Min: 1</span>
+                            <span>Max: 2000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block mb-2 text-sm font-medium" style="color: var(--primary-accent);">Expiry Month</label>
+                        <div id="custom-month-select" class="custom-select-container"></div>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium" style="color: var(--primary-accent);">Expiry Year</label>
+                        <div id="custom-year-select" class="custom-select-container"></div>
+                    </div>
+                    <div>
+                        <label for="cvv" class="block mb-2 text-sm font-medium" style="color: var(--primary-accent);">CVV (Optional)</label>
+                        <input class="w-full form-input text-sm rounded-lg p-3" type="text" id="cvv" placeholder="Random">
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="total-generated">0</div>
+                        <div class="stat-label">Total Generated</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="session-count">0</div>
+                        <div class="stat-label">This Session</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="success-rate">100%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <button id="generate-button" type="submit" class="w-full btn-primary font-bold py-3 text-lg rounded-lg pulse">Unleash the Sharingan</button>
+                    <button id="copy-button" type="button" class="w-full btn-secondary font-bold py-3 text-lg rounded-lg">Copy Results</button>
+                </div>
+                <div class="progress-bar" id="progress-bar"></div>
+            </form>
+        </div>
+
+        <div class="glass-card p-6 md:p-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold" style="color: var(--primary-accent);">Results Log</h2>
+                <div class="flex items-center space-x-4">
+                    <button id="clear-button" class="text-sm glass-button py-1 px-3 rounded">Clear</button>
+                    <div id="card-count" class="text-right text-sm" style="color: #888;"></div>
+                </div>
+            </div>
+            <textarea id="result" class="w-full text-base rounded-lg p-4 resize-none h-96" readonly placeholder="Your generated cards will appear here..."></textarea>
+            
+            <div class="export-buttons">
+                <button id="export-txt" class="export-btn glass-button">
+                    📄 Export TXT
+                </button>
+                <button id="export-json" class="export-btn glass-button">
+                    📊 Export JSON
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="w-full max-w-4xl mx-auto my-8 text-center" style="color: #888;">
+        <p>&copy; 2025 TEAM KRX, The power of the Krsxh protects this page.</p>
+    </footer>
+
+    <script type="module">
+        (function() {
+            'use strict';
+            const API_URL = 'https://cc-gen-lime.vercel.app/generate';
+            let selectedMonth = '';
+            let selectedYear = '';
+            const binInput = document.getElementById('bin');
+            const cvvInput = document.getElementById('cvv');
+            const quantityInput = document.getElementById('quantity');
+            const generateButton = document.getElementById('generate-button');
+            const resultTextarea = document.getElementById('result');
+            const cardCount = document.getElementById('card-count');
+            const copyButton = document.getElementById('copy-button');
+            const clearButton = document.getElementById('clear-button');
+            const exportTxtButton = document.getElementById('export-txt');
+            const exportJsonButton = document.getElementById('export-json');
+            const generatorForm = document.getElementById('generator-form');
+            const progressBar = document.getElementById('progress-bar');
+            const cardPreview = document.getElementById('card-preview');
+            const previewNumber = document.getElementById('preview-number');
+            const previewExpiry = document.getElementById('preview-expiry');
+            const totalGenerated = document.getElementById('total-generated');
+            const sessionCount = document.getElementById('session-count');
+            const successRate = document.getElementById('success-rate');
+            const floatingBallsContainer = document.getElementById('floating-balls-container');
+            
+            // Stats tracking
+            let stats = {
+                totalGenerated: parseInt(localStorage.getItem('totalGenerated')) || 0,
+                sessionGenerated: 0,
+                successfulRequests: 0,
+                totalRequests: 0
+            };
+
+            // Update stats display
+            function updateStats() {
+                totalGenerated.textContent = stats.totalGenerated.toLocaleString();
+                sessionCount.textContent = stats.sessionGenerated.toLocaleString();
+                const rate = stats.totalRequests > 0 ? Math.round((stats.successfulRequests / stats.totalRequests) * 100) : 100;
+                successRate.textContent = `${rate}%`;
+            }
+
+            // Save stats to localStorage
+            function saveStats() {
+                localStorage.setItem('totalGenerated', stats.totalGenerated);
+            }
+
+            // Floating balls function
+            function createFloatingBalls() {
+                // Clear previous balls
+                floatingBallsContainer.innerHTML = '';
+                
+                // Create 3 balls
+                for (let i = 1; i <= 3; i++) {
+                    const ball = document.createElement('div');
+                    ball.className = `floating-ball ball-${i}`;
+                    floatingBallsContainer.appendChild(ball);
+                    
+                    // Remove ball after animation completes
+                    setTimeout(() => {
+                        if (ball.parentNode) {
+                            ball.parentNode.removeChild(ball);
+                        }
+                    }, 8000);
+                }
+            }
+
+            // Start floating balls interval (every 60 seconds)
+            setInterval(createFloatingBalls, 60000);
+            
+            // Initial call to start the balls immediately
+            createFloatingBalls();
+
+            // Initialize stats
+            updateStats();
+
+            // --- Custom Select Logic ---
+            function createCustomSelect(containerId, initialOptions, onChange) {
+                const container = document.getElementById(containerId);
+                if (!container) return null;
+                container.innerHTML = `<div class="custom-select-trigger" tabindex="0"><span class="selected-value">Random</span><div class="arrow">&#x25BC;</div></div><div class="custom-select-options" role="listbox"></div>`;
+                const trigger = container.querySelector('.custom-select-trigger');
+                const optionsContainer = container.querySelector('.custom-select-options');
+                const selectedValueEl = container.querySelector('.selected-value');
+                const populateOptions = (newOptions) => {
+                    optionsContainer.innerHTML = '';
+                    newOptions.forEach(opt => {
+                        const optionEl = document.createElement('div');
+                        optionEl.className = 'custom-select-option';
+                        optionEl.textContent = opt.text;
+                        optionEl.dataset.value = opt.value;
+                        if (opt.disabled) {
+                            optionEl.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                        optionsContainer.appendChild(optionEl);
+                    });
+                };
+                const closeDropdown = () => container.classList.remove('open');
+                trigger.addEventListener('click', () => container.classList.toggle('open'));
+                optionsContainer.addEventListener('click', (event) => {
+                    const selectedOption = event.target;
+                    if (selectedOption.classList.contains('custom-select-option') && !selectedOption.classList.contains('opacity-50')) {
+                        selectedValueEl.textContent = selectedOption.textContent;
+                        onChange(selectedOption.dataset.value);
+                        closeDropdown();
+                    }
+                });
+                populateOptions(initialOptions);
+                return { populateOptions };
+            }
+            window.addEventListener('click', (event) => {
+                document.querySelectorAll('.custom-select-container.open').forEach(select => {
+                    if (!select.contains(event.target)) {
+                        select.classList.remove('open');
+                    }
+                });
+            });
+
+            // --- Toast and Loading State ---
+            const showToast = (message, type = 'success') => {
+                const toast = document.createElement('div');
+                const bgColor = type === 'error' ? 'bg-red-500' : 'bg-blue-500'; 
+                toast.className = `fixed bottom-5 right-5 z-50 ${bgColor} text-white py-3 px-5 rounded-lg shadow-xl opacity-0 transform translate-y-2 transition-all duration-300`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.classList.remove('opacity-0', 'translate-y-2'), 10);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-2');
+                    toast.addEventListener('transitionend', () => toast.remove());
+                }, 3000);
+            };
+            
+            const toggleLoadingState = (isLoading) => {
+                generateButton.disabled = isLoading;
+                generateButton.innerHTML = isLoading ? `<span class="flex items-center justify-center"><svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Forging...</span>` : 'Unleash the Sharingan';
+                
+                // Update progress bar
+                if (isLoading) {
+                    progressBar.style.width = '100%';
+                } else {
+                    setTimeout(() => {
+                        progressBar.style.width = '0%';
+                    }, 300);
+                }
+            };
+            
+            // --- Dropdown Initialization ---
+            const monthSelectInstance = createCustomSelect('custom-month-select', [], value => { 
+                selectedMonth = value; 
+                updateCardPreview();
+            });
+            
+            const yearSelectInstance = createCustomSelect('custom-year-select', [], value => { 
+                selectedYear = value; 
+                populateDateDropdowns(true); 
+                updateCardPreview();
+            });
+
+            function populateDateDropdowns(yearChanged = false) {
+                const currentYear = new Date().getFullYear();
+                const currentMonth = new Date().getMonth() + 1;
+                if (!yearChanged && yearSelectInstance) {
+                    const yearOpts = [{ text: 'Random', value: '' }];
+                    for (let year = currentYear; year <= currentYear + 15; year++) {
+                        yearOpts.push({ text: year, value: year });
+                    }
+                    yearSelectInstance.populateOptions(yearOpts);
+                }
+                if (monthSelectInstance) {
+                    const monthOpts = [{ text: 'Random', value: '' }];
+                    const chosenYear = parseInt(selectedYear, 10);
+                    for (let i = 1; i <= 12; i++) {
+                        const monthValue = i.toString().padStart(2, '0');
+                        const isDisabled = chosenYear === currentYear && i < currentMonth;
+                        monthOpts.push({ text: monthValue, value: monthValue, disabled: isDisabled });
+                    }
+                    monthSelectInstance.populateOptions(monthOpts);
+                }
+            }
+
+            // Update card preview based on BIN input
+            function updateCardPreview() {
+                const bin = binInput.value.replace(/[^0-9xX]/g, "");
+                
+                if (bin.length >= 6) {
+                    // Show card preview
+                    cardPreview.classList.remove('hidden');
+                    
+                    // Format preview number
+                    let preview = bin;
+                    for (let i = bin.length; i < 16; i++) {
+                        preview += i % 4 === 0 ? ' ' : '*';
+                    }
+                    
+                    // Add spaces for formatting
+                    preview = preview.replace(/(.{4})/g, '$1 ').trim();
+                    previewNumber.textContent = preview;
+                    
+                    // Update expiry if selected
+                    if (selectedMonth && selectedYear) {
+                        previewExpiry.textContent = `${selectedMonth}/${String(selectedYear).slice(-2)}`;
+                    } else {
+                        previewExpiry.textContent = 'MM/YY';
+                    }
+                } else {
+                    cardPreview.classList.add('hidden');
+                }
+            }
+
+            // --- API Handling ---
+            const handleGeneration = async (event) => {
+                event.preventDefault();
+                const bin = binInput.value.replace(/[^0-9xX]/g, "");
+                const quantity = parseInt(quantityInput.value, 10) || 15;
+                
+                if (bin.length < 6) {
+                    showToast("BIN must be at least 6 digits.", "error");
+                    return;
+                }
+                
+                if (quantity > 2000) {
+                    showToast("Quantity cannot exceed 2000.", "error");
+                    return;
+                }
+                
+                const apiUrl = buildApiUrl(bin, quantity);
+                resultTextarea.value = "Summoning chakra..."; // Thematic message
+                cardCount.textContent = "";
+                toggleLoadingState(true);
+                
+                // Update stats
+                stats.totalRequests++;
+                
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                    const data = await response.json();
+                    processApiResponse(data);
+                    stats.successfulRequests++;
+                } catch (error) {
+                    resultTextarea.value = `Error: ${error.message}`;
+                    showToast("API Connection Error. Genjutsu failed.", "error");
+                } finally {
+                    toggleLoadingState(false);
+                    updateStats();
+                    saveStats();
+                }
+            };
+
+            function buildApiUrl(bin, quantity) {
+                let url = new URL(API_URL);
+                url.searchParams.append('bin', bin);
+                url.searchParams.append('limit', quantity);
+                if (selectedMonth) url.searchParams.append('month', selectedMonth);
+                if (selectedYear) url.searchParams.append('year', String(selectedYear).slice(-2));
+                if (cvvInput.value) url.searchParams.append('cvv', cvvInput.value);
+                return url;
+            }
+
+            function processApiResponse(data) {
+                if (data && data.cards && data.cards.length > 0) {
+                    resultTextarea.value = data.cards.map(card => `${card.number}|${card.expiry}|${card.cvv}`).join("\n");
+                    const numCards = data.cards.length;
+                    // Thematic success message
+                    cardCount.textContent = `${numCards} card${numCards > 1 ? 's' : ''} forged by the Krsxh.`;
+                    showToast(`${numCards} cards forged!`, 'success');
+                    
+                    // Update stats
+                    stats.totalGenerated += numCards;
+                    stats.sessionGenerated += numCards;
+                } else {
+                    resultTextarea.value = "";
+                    cardCount.textContent = "";
+                    showToast("No cards were forged.", "error");
+                }
+            }
+
+            // --- Copy Functionality ---
+            const copyResults = () => {
+                const textToCopy = resultTextarea.value;
+                if (!textToCopy || textToCopy.startsWith('Forging') || textToCopy.startsWith('Summoning chakra')) {
+                    return showToast("Nothing to copy. Activate your Sharingan first.", "error");
+                }
+                
+                try {
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        showToast("Mangekyō: Copy Complete! The Uchiha approve.", "success");
+                    });
+                } catch (err) {
+                    // Fallback for older browsers
+                    resultTextarea.select();
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges(); // Deselect
+                    showToast("Mangekyō: Copy Complete! The Uchiha approve.", "success");
+                }
+            };
+            
+            // Clear results
+            const clearResults = () => {
+                resultTextarea.value = "";
+                cardCount.textContent = "";
+                showToast("Results cleared.", "success");
+            };
+
+            // Export to TXT
+            const exportToTxt = () => {
+                const textToExport = resultTextarea.value;
+                if (!textToExport || textToExport.startsWith('Forging') || textToExport.startsWith('Summoning chakra')) {
+                    return showToast("Nothing to export. Generate cards first.", "error");
+                }
+                
+                const blob = new Blob([textToExport], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `krx_cards_${new Date().toISOString().slice(0, 10)}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast("Cards exported as TXT!", "success");
+            };
+
+            // Export to JSON
+            const exportToJson = () => {
+                const textToExport = resultTextarea.value;
+                if (!textToExport || textToExport.startsWith('Forging') || textToExport.startsWith('Summoning chakra')) {
+                    return showToast("Nothing to export. Generate cards first.", "error");
+                }
+                
+                const lines = textToExport.split('\n').filter(line => line.trim() !== '');
+                const cards = lines.map(line => {
+                    const [number, expiry, cvv] = line.split('|');
+                    return { number, expiry, cvv };
+                });
+                
+                const jsonData = {
+                    generatedBy: "KRX Community CC Gen Tool",
+                    generationDate: new Date().toISOString(),
+                    cards: cards
+                };
+                
+                const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `krx_cards_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast("Cards exported as JSON!", "success");
+            };
+            
+            function initialize() {
+                generatorForm.addEventListener("submit", handleGeneration);
+                copyButton.addEventListener("click", copyResults);
+                clearButton.addEventListener("click", clearResults);
+                exportTxtButton.addEventListener("click", exportToTxt);
+                exportJsonButton.addEventListener("click", exportToJson);
+                binInput.addEventListener("input", updateCardPreview);
+                populateDateDropdowns();
+            }
+
+            initialize();
+        })();
+    </script>
+</body>
+</html>
